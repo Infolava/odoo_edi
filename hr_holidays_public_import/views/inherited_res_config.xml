@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright:           ©  2017 Infolava GmbH  All rights reserved.
+ ================================================================================
+    This file is part of TransALM
+
+    TransALM is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<openerp>
+	<data>
+		<record model="ir.ui.view" id="view_general_configuration">
+			<field name="name">base.config.settings.calendar.provider</field>
+			<field name="model">base.config.settings</field>
+			<field name="inherit_id" ref="base_setup.view_general_configuration" />
+			<field name="arch" type="xml">
+				<xpath expr="//group[last()]" position="after">
+					<group>
+						<label for="id" string="Calendar Provider Configuration"/>
+						<div name="Calendar Provider Configuration">
+							<div>
+							<label for="provider_name" />
+								<field name="provider_name" />
+								
+							</div>
+							<div>
+							<label for="provider_url" />
+								<field name="provider_url" />
+								
+							</div>
+							<div >
+								<blockquote>
+									To setup the import process from your provider, first you have to
+									get the api key.
+									<br />
+									Paste the API KEY here:
+									<field name="provider_api_key"
+										placeholder="e.g. 1234-xyz.apps.googleusercontent.com" />
+								</blockquote>
+							</div>
+							<div >
+								<blockquote>
+									The response parser must be a python function that a return a list of dictionaries.
+									<br />
+									@param Json dict : Json response from the provider api
+									<br />
+									@return list of dictionaries
+									<br />
+									<p>
+									Example : 
+									<br />[{year : '2017', holidays : [{'name' : 'New Year', 'date' : '2017/01/01'}, {'name' : 'Labour Day', 'date' : '2017/05/01'}]},
+													{year : '2018', holidays : [{'name' : 'New Year', 'date' : '2018/01/01'}, {'name' : 'Labour Day', 'date' : '2018/05/01'}]}
+													]
+									</p>
+									<field name="provider_response_parser"/>
+								</blockquote>
+							</div>
+						</div>
+					</group>
+				</xpath>
+			</field>
+		</record>
+
+	</data>
+</openerp>
