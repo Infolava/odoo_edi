@@ -39,7 +39,9 @@
                 ],
     'data': [
              'views/inherited_res_config.xml',
+             'views/inherited_hr_contract_view.xml',
              'data/calendar_provider.xml',
+             
             ],
     'installable': True,
     'application' : True,

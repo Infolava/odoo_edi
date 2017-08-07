@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 # --------------------------------------------------------------------------------
 # Project:               TransALM
-# Copyright:           © 2017 Infolava GmbH. All rights reserved.
+# Copyright:           © 2017 All rights reserved.
 # License:
 # --------------------------------------------------------------------------------
 #    This file is part of TransALM
@@ -19,14 +19,31 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # --------------------------------------------------------------------------------
-# Created:               Jul 24, 2017 11:42:46 AM by atrabelsi
-# Last modified:      2017-07-24 11:42
+# Created:               Aug 7, 2017 11:16:49 AM by hbouzidi
+# Last modified:      2017-08-07 11:16
 #
 # Last Author:           $LastChangedBy$
 # Last Checkin:          $LastChangedDate$
 # Checked out Version:   $LastChangedRevision$
 # HeadURL:               $HeadURL$
 # --------------------------------------------------------------------------------
-import res_config, calendar_provider, inherited_hr_contract
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4
-#eof $Id$
+
+from openerp import models, fields, api, _ 
+from openerp.exceptions import except_orm
+
+class hr_contract(models.Model):
+    _name = 'hr.contract'
+    _inherit = 'hr.contract'
+    _descripton = 'Manage contract by state'
+    
+    state_id = fields.Many2one('res.country.state', string= 'State', ondelete = 'restrict', required = True)
+    
+    @api.multi
+    def write(self, values):
+        if values.has_key('state_id'):
+            raise except_orm(_("You cannot modify the state of the current contract"), self.state_id.name)
+        return super(hr_contract,self).write(values)
+    
+
+    
+
