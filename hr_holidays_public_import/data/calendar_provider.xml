@@ -25,7 +25,30 @@
 			<field name="provider_url">https://www.googleapis.com/calendar/v3/calendars/
 			</field>
 			<field name="provider_api_key">admin</field>
-			<field name="provider_response_parser">def googlecalendar_parser(response)</field>
+			<field name="provider_response_parser"><![CDATA[
+def googlecalendar_parser(response, date_format="%Y-%m-%d"):
+    
+    # sort holidays list by start date
+    holidays_items = sorted(response['items'], \
+                            key=lambda hol_items: datetime.strptime(hol_items['start']['date'], date_format))
+    hol = {}
+    holidays_list = []
+    holidays_by_year = []
+    year =  0000
+    for item in holidays_items :
+        hol['name'] = item['summary']
+        date_end = datetime.strptime(item['end']['date'], date_format) 
+        date_start = datetime.strptime(item['start']['date'], date_format)
+        while date_start < date_end :
+            if date_start.year != year :
+                year = date_start.year
+                holidays_by_year.append({'year' : year, 'holidays_list' : []})
+            hol['date'] = date_start
+            holidays_list.append(hol)
+            date_start += timedelta(days = 1)
+        holidays_by_year[-1]['holidays_list'] += holidays_list
+    return holidays_by_year
+	]]></field>
 		</record>
 
 	</data>
