@@ -27,15 +27,16 @@
 			<field name="provider_api_key">admin</field>
 			<field name="provider_response_parser"><![CDATA[
 def googlecalendar_parser(response, date_format="%Y-%m-%d"):
-    
+    from datetime import datetime, timedelta
     # sort holidays list by start date
     holidays_items = sorted(response['items'], \
                             key=lambda hol_items: datetime.strptime(hol_items['start']['date'], date_format))
-    hol = {}
-    holidays_list = []
-    holidays_by_year = []
+    holidays_by_year = [] 
+    # default value, to be update with first holiday year
     year =  0000
     for item in holidays_items :
+        holidays_list = []
+        hol = {}
         hol['name'] = item['summary']
         date_end = datetime.strptime(item['end']['date'], date_format) 
         date_start = datetime.strptime(item['start']['date'], date_format)
