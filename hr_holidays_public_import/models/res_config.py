@@ -27,9 +27,7 @@ class base_config_settings(models.TransientModel):
     _inherit = 'base.config.settings'
 
     provider_name = fields.Char('Calendar Provider Name')
-    provider_url = fields.Char('Calendar Provider URL')
     provider_api_key = fields.Char('Calendar Provider API key')
-    provider_response_parser = fields.Text('Calendar Provider response parser')
 
     def default_get(self, cr, uid, fields, context=None):
         res = super(base_config_settings, self).default_get(cr, uid, fields, context=context)
@@ -41,8 +39,6 @@ class base_config_settings(models.TransientModel):
         googlecalendar= self.pool.get('calendar.provider').read(cr, uid, [googlecalendar_id], context = context)[0]
         return {
             'provider_name': googlecalendar['provider_name'],
-            'provider_url': googlecalendar['provider_url'],
-            'provider_response_parser': googlecalendar['provider_response_parser'],
             'provider_api_key': googlecalendar['provider_api_key'],
         }
         
@@ -50,9 +46,6 @@ class base_config_settings(models.TransientModel):
         calendar_provider_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'hr_holidays_public_import', 'provider_googlecalendar')[1]
         config = self.browse(cr, uid, ids[0], context=context)
         calendar_param = {
-            'provider_name': config.provider_name,
-            'provider_url': config.provider_url,
-            'provider_response_parser': config.provider_response_parser,
             'provider_api_key' : config.provider_api_key,
         }
 

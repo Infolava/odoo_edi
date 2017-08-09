@@ -19,13 +19,28 @@
 -->
 <openerp>
 	<data noupdate="1">
+		<record model="ir.ui.view" id="wizard_import_public_holidays_form_view">
+			<field name="name">Import Public Holidays</field>
+			<field name="model">hr.holidays.public.wizard</field>
+			<field name="arch" type="xml">
+				<form string="Import Public Holidays">
+					<group>
+						<field name="country_id" />
+						<field name="lang_id" />
+					</group>
+					<footer>
+						<button name="import_public_holidays" type="object" string="Import" class="oe_highlight" />
+						or
+						<button special="cancel" string="Cancel" />
+					</footer>
 
-		<record id="provider_googlecalendar" model="calendar.provider">
-			<field name="provider_name">Google Calendar</field>
-			<field name="provider_url"><![CDATA[https://www.googleapis.com/calendar/v3/calendars/{country}__{lang}%40holiday.calendar.google.com/events?key={api_key}]]>
+				</form>
 			</field>
-			<field name="provider_api_key">admin</field>
 		</record>
+
+		<act_window id="launch_import_public_holidays_wizard" name="Import Public Holidays"
+			src_model="hr.holidays.public" res_model="hr.holidays.public.wizard"
+			view_mode="form" target="new" key2="client_action_multi" />
 
 	</data>
 </openerp>

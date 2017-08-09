@@ -19,34 +19,14 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # --------------------------------------------------------------------------------
-# Created:               Jul 24, 2017 11:42:46 AM by atrabelsi
-# Last modified:      2017-07-24 11:42
+# Created:               Aug 8, 2017 12:37:52 PM by atrabelsi
+# Last modified:      2017-08-08 12:37
 #
 # Last Author:           $LastChangedBy$
 # Last Checkin:          $LastChangedDate$
 # Checked out Version:   $LastChangedRevision$
 # HeadURL:               $HeadURL$
 # --------------------------------------------------------------------------------
-{
-    'name' : 'Import HR Public Holidays',
-    'version' : '8.0.1.0.0',
-    'category' : 'Human Resources',
-    'author' : 'Infolava',
-    'website' : 'http://www.infolava.ch',
-    'summary' : "Import Public Holidays From External Provider",
-    'depends' : [
-                 'hr_public_holidays',
-                 'hr_contract',
-                ],
-    'data': [
-             'views/inherited_res_config.xml',
-             'views/inherited_hr_contract_view.xml',
-             'views/public_holidays_import_wizard_view.xml',
-             'data/calendar_provider.xml',
-             
-            ],
-    'installable': True,
-    'application' : True,
-}
+import hr_holidays_public_wizard
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4
 #eof $Id$

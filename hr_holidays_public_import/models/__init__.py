@@ -27,6 +27,6 @@
 # Checked out Version:   $LastChangedRevision$
 # HeadURL:               $HeadURL$
 # --------------------------------------------------------------------------------
-import res_config, calendar_provider, inherited_hr_contract
+import res_config, calendar_provider, inherited_hr_contract, inherited_hr_holidays_public
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4
 #eof $Id$

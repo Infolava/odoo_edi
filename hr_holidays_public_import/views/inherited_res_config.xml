@@ -30,15 +30,10 @@
 						<div name="Calendar Provider Configuration">
 							<div>
 							<label for="provider_name" />
-								<field name="provider_name" />
+								<field name="provider_name" readony="1"/>
 								
 							</div>
 							<div>
-							<label for="provider_url" />
-								<field name="provider_url" />
-								
-							</div>
-							<div >
 								<blockquote>
 									To setup the import process from your provider, first you have to
 									get the api key.
@@ -48,23 +43,7 @@
 										placeholder="e.g. 1234-xyz.apps.googleusercontent.com" />
 								</blockquote>
 							</div>
-							<div >
-								<blockquote>
-									The response parser must be a python function that a return a list of dictionaries.
-									<br />
-									@param Json dict : Json response from the provider api
-									<br />
-									@return list of dictionaries
-									<br />
-									<p>
-									Example : 
-									<br />[{year : '2017', holidays : [{'name' : 'New Year', 'date' : '2017/01/01'}, {'name' : 'Labour Day', 'date' : '2017/05/01'}]},
-													{year : '2018', holidays : [{'name' : 'New Year', 'date' : '2018/01/01'}, {'name' : 'Labour Day', 'date' : '2018/05/01'}]}
-													]
-									</p>
-									<field name="provider_response_parser"/>
-								</blockquote>
-							</div>
+
 						</div>
 					</group>
 				</xpath>
