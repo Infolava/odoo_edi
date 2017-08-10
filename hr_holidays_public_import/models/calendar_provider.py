@@ -65,6 +65,8 @@ class goolglecalendar_provider(models.Model):
             holidays_list = []
             hol = {}
             hol['name'] = item['summary']
+            if item.has_key('description') :
+                hol['states'] = item['description'].split(': ')[1].split(', ')
             date_end = datetime.strptime(item['end']['date'], date_format) 
             date_start = datetime.strptime(item['start']['date'], date_format)
             while date_start < date_end :

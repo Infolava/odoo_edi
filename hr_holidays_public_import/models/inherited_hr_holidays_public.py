@@ -27,7 +27,7 @@
 # Checked out Version:   $LastChangedRevision$
 # HeadURL:               $HeadURL$
 # --------------------------------------------------------------------------------
-from datetime import date, datetime
+from datetime import datetime
 from openerp import fields, models, api, _
 from openerp.exceptions import ValidationError, Warning
 
@@ -38,16 +38,29 @@ class HrPublicHolidays(models.Model):
     _inherit = 'hr.holidays.public'
         
     def import_public_holidays_by_country(self, country, lang, year):
+        def _get_state_ids_from_name(state_names, country_id) :
+            st_ids = []
+            for st_name in state_names :
+                st_ids.append(self.env['res.country.state'].get_state_id_from_name(st_name, country_id))
+            return st_ids
+        
         provider = self.env['calendar.provider'].browse(1)
         holidays_list = provider.request_handler(country.code, lang, year)
         for year in holidays_list:
             year_rec = self.search([('year', '=', year['year']), ('country_id', '=', country.id)])
-            year_id = year_rec[0].id if year_rec else self.create({'year':year['year'], 'country_id':country.id}).id
+            year_id = year_rec[0].id if year_rec else self.create({'year':year['year'], \
+                                                                   'country_id':country.id}).id
             for hol in year['holidays_list']:
                 hol.update({'year_id':year_id})
-                line = self.env['hr.holidays.public.line'].search([('year_id', '=', year_id), ('date', '=', datetime.strftime(hol['date'], DF))])
+                hol.update({'state_ids' : False})
+                if hol.has_key('states') :
+                    hol.update({'state_ids' : [[6, False, _get_state_ids_from_name(hol['states'], country.id)]]})
+                    del hol['states']
+                line = self.env['hr.holidays.public.line'].search([('year_id', '=', year_id), \
+                                                                   ('date', '=', datetime.strftime(hol['date'], DF))])
                 if line :
                     line[0].name = hol['name']
+                    line[0].state_ids = hol['state_ids']
                 else :
                     self.env['hr.holidays.public.line'].create(hol)
 

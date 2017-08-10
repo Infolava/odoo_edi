@@ -28,5 +28,6 @@
 # HeadURL:               $HeadURL$
 # --------------------------------------------------------------------------------
 import res_config, calendar_provider, inherited_hr_contract, inherited_hr_holidays_public
+import inherited_res_country
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4
 #eof $Id$
