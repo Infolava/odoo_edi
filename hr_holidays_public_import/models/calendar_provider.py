@@ -13,6 +13,9 @@ class calendar_provider(models.Model):
     provider_url = fields.Char('Provider URL')
     provider_api_key = fields.Char('Provider API key')
    
+    def get_country_code_from_calendar(self, country):
+        return country.code
+    
     def provider_response_parser(self, json_request_response):
         return []
    
@@ -51,6 +54,48 @@ class goolglecalendar_provider(models.Model):
 #     provider_url = "https://www.googleapis.com/calendar/v3/calendars/{country}__{lang}%40holiday.calendar.google.com/events?key={api_key}"
 #     provider_api_key = "admin"
    
+    country_list = {'Australia': 'australian',
+                     'Austria': 'austrian',
+                     'Brazil' : 'canadian',
+                     'China' : 'china',
+                     'Denmark' : 'danish',
+                     'Netherlands': 'dutch',
+                     'Finland' : 'finnish',
+                     'France' : 'french',
+                     'Germany': 'german',
+                    'Greece' : 'greek',
+                    'Hong Kong (C)' : 'hong_kong_c',
+                    'Hong Kong' : 'hong_kong',
+                    'India' : 'indian',
+                    'Indonesia' : 'indonesian',
+                    'Iran' : 'iranian',
+                    'Ireland' : 'irish',
+                    'Italia' : 'italian',
+                    'Japan' : 'japanese',
+                    'Malaysia' : 'malaysia',
+                    'Mexico' : 'mexican',
+                    'New Zealand' : 'new_zealand',
+                    'Norwegia' : 'norwegian',
+                    'Philippines' : 'philippines',
+                    'Poland' : 'polish',
+                    'Portuguese' : 'portuguese',
+                    'Russia' : 'russian',
+                    'Singapore' : 'singapore',
+                    'South Africa' : 'sa',
+                    'South Korean' : 'south_korea',
+                    'Spain' : 'spain',
+                    'Sweden' : 'swedish',
+                    'Taiwan' : 'taiwan',
+                    'Thai' : 'thai',
+                    'United Kingdom' : 'uk',
+                    'United States' : 'usa',
+                    'Vietnam' : 'vietnamese'}
+             
+    def get_country_code_from_calendar(self, country):
+        if country.name in self.country_list :
+            return self.country_list[country.name]
+        return super(goolglecalendar_provider, self).get_country_code(country)
+    
     def provider_response_parser(self, json_request_response, date_format = "%Y-%m-%d"):
         from datetime import datetime, timedelta
         if not json_request_response['items'] :

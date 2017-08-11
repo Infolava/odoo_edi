@@ -45,7 +45,8 @@ class HrPublicHolidays(models.Model):
             return st_ids
         
         provider = self.env['calendar.provider'].browse(1)
-        holidays_list = provider.request_handler(country.code, lang, year)
+        country_code = provider.get_country_code_from_calendar(country)
+        holidays_list = provider.request_handler(country_code, lang, year)
         for year in holidays_list:
             year_rec = self.search([('year', '=', year['year']), ('country_id', '=', country.id)])
             year_id = year_rec[0].id if year_rec else self.create({'year':year['year'], \
@@ -64,5 +65,9 @@ class HrPublicHolidays(models.Model):
                 else :
                     self.env['hr.holidays.public.line'].create(hol)
 
+class HrPublicHolidaysLine(models.Model):
+    _inherit = 'hr.holidays.public.line'
+
+    name = fields.Char('Name', required=True,  translate = True)
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4
 #eof $Id$
