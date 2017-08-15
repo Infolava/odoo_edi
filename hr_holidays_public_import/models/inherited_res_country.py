@@ -36,7 +36,7 @@ class res_state(models.Model):
     
     def get_state_id_from_name(self, state_name, country_id) :
         st_code = state_name[0:3].upper()
-        state= self.search([('name', 'ilike', state_name), \
+        state= self.search(['&', ('name', 'ilike', state_name), \
                                                       ('country_id', '=', country_id)])
         return state[0].id if state else self.create({'name' : state_name, \
                                                    'country_id': country_id,

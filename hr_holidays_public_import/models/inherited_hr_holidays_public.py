@@ -37,17 +37,22 @@ class HrPublicHolidays(models.Model):
     _name = 'hr.holidays.public'
     _inherit = 'hr.holidays.public'
         
-    def import_public_holidays_by_country(self, country, lang, year):
+    def import_public_holidays_by_country(self, country, year):
         def _get_state_ids_from_name(state_names, country_id) :
             st_ids = []
             for st_name in state_names :
                 st_ids.append(self.env['res.country.state'].get_state_id_from_name(st_name, country_id))
             return st_ids
-        
+        # get list of loaded languages
+        lang_codes = [lang.code for lang in self.env['res.lang'].search([])]
+        # Ensure English is on loaded language list 
+        if 'en_US' not in lang_codes :
+            lang_codes.insert('en_US', 0)
         provider = self.env['calendar.provider'].browse(1)
         country_code = provider.get_country_code_from_calendar(country)
-        holidays_list = provider.request_handler(country_code, lang, year)
-        for year in holidays_list:
+        holidays_list = provider.request_handler(country_code, lang_codes, year)
+        lang_codes.remove('en_US')
+        for year in holidays_list :
             year_rec = self.search([('year', '=', year['year']), ('country_id', '=', country.id)])
             year_id = year_rec[0].id if year_rec else self.create({'year':year['year'], \
                                                                    'country_id':country.id}).id
@@ -57,13 +62,28 @@ class HrPublicHolidays(models.Model):
                 if hol.has_key('states') :
                     hol.update({'state_ids' : [[6, False, _get_state_ids_from_name(hol['states'], country.id)]]})
                     del hol['states']
-                line = self.env['hr.holidays.public.line'].search([('year_id', '=', year_id), \
+                lines = self.env['hr.holidays.public.line'].search([('year_id', '=', year_id), \
                                                                    ('date', '=', datetime.strftime(hol['date'], DF))])
-                if line :
-                    line[0].name = hol['name']
-                    line[0].state_ids = hol['state_ids']
+                if lines :
+                    line = lines[0]
+                    line.name = hol['name']
+                    line.state_ids = hol['state_ids']
                 else :
-                    self.env['hr.holidays.public.line'].create(hol)
+                    line = self.env['hr.holidays.public.line'].create(hol)
+                for lang in lang_codes :
+                    tr = self.env['ir.translation'].is_translation_exist('hr.holidays.public.line,name', \
+                                                                           hol['name'], \
+                                                                           lang)
+                    if tr :
+                        tr.write({'value' : hol[lang], 'res_id' : line.id})
+                    else :
+                        self.env['ir.translation'].create({'name' : 'hr.holidays.public.line,name', \
+                                                           'lang' : lang, \
+                                                           'src' : hol['name'], \
+                                                           'value' : hol[lang] if hol.has_key(lang) else hol['name'],
+                                                           'res_id' : line.id,
+                                                           'type' : 'model',
+                                                           })
 
 class HrPublicHolidaysLine(models.Model):
     _inherit = 'hr.holidays.public.line'

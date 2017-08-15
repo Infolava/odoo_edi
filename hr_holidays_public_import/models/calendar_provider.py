@@ -2,6 +2,9 @@ from openerp import models, fields, api, _
 from openerp.exceptions import AccessError, ValidationError, Warning
 import json
 import urllib2
+import logging
+
+_logger =  logging.getLogger(__name__)
 
 class calendar_provider(models.Model):
     """Class defining the configuration values of a Calendar provider"""
@@ -20,32 +23,37 @@ class calendar_provider(models.Model):
         return []
    
     @api.multi
-    def request_handler(self, country_code, lang_code, year):
+    def request_handler(self, country_code, lang_codes, year):
+        self.ensure_one()
         headers = {
                    'Content-Type': 'application/json',
                    }
-        url = self.provider_url.format(country = country_code, lang = lang_code, api_key = self.provider_api_key, year = year)
-        request = urllib2.Request(url, headers = headers)
-        try :
-            res = urllib2.urlopen(request)
-            response = res.read()
-            json_response = json.loads(response)
-            res.close()
-        except urllib2.HTTPError as e:
-            if e.code == 404 :
-                #TODO fix HTTPError for unsupported language 
-                #TODO fix HTTPError for unsupported country
-                raise ValidationError(_('Unsupported language or country'))
-            elif e.code == 400 :
-                raise AccessError(_('Please contact your administration to verify API key configuration'))
-            else :
-                #TODO Test other HTTPError
-                raise ValidationError(_('Unknown error'))
+        json_response = {}
+        for lang_code in lang_codes :
+            url = self.provider_url.format(country = country_code, lang = lang_code.split('_')[0], api_key = self.provider_api_key, year = year)
+            request = urllib2.Request(url, headers = headers)
+            try :
+                res = urllib2.urlopen(request)
+                response = res.read()
+                json_response[lang_code] = json.loads(response)
+                res.close()
+            except urllib2.HTTPError as e:
+                if e.code == 404 :
+                    if lang_code != 'en':
+                        raise ValidationError(_('Unsupported country'))
+                    else :
+                        #TODO fix HTTPError for unsupported language 
+                        _logger.warning('Not supported language %s for provider %s' %(lang_code, self.provider_name))
+                elif e.code == 400 :
+                    raise AccessError(_('Please contact your administration to verify API key configuration'))
+                else :
+                    #TODO Test other HTTPError
+                    raise ValidationError(_('Unknown error'))
         return self.provider_response_parser(json_response)
 
 
 class goolglecalendar_provider(models.Model):
-    """Class defining the response parser of Gogle Calendar provider"""
+    """Class defining the response parser of Google Calendar provider"""
 
     _inherit = 'calendar.provider'
     _description = 'Google Calendar Provider Parameters'
@@ -64,7 +72,6 @@ class goolglecalendar_provider(models.Model):
                      'France' : 'french',
                      'Germany': 'german',
                     'Greece' : 'greek',
-                    'Hong Kong (C)' : 'hong_kong_c',
                     'Hong Kong' : 'hong_kong',
                     'India' : 'indian',
                     'Indonesia' : 'indonesian',
@@ -94,22 +101,28 @@ class goolglecalendar_provider(models.Model):
     def get_country_code_from_calendar(self, country):
         if country.name in self.country_list :
             return self.country_list[country.name]
-        return super(goolglecalendar_provider, self).get_country_code(country)
+        return super(goolglecalendar_provider, self).get_country_code_from_calendar(country)
     
     def provider_response_parser(self, json_request_response, date_format = "%Y-%m-%d"):
         from datetime import datetime, timedelta
-        if not json_request_response['items'] :
+        if not json_request_response['en_US']['items'] :
             raise Warning(_('No Data Provided for selected country'))
         # sort holidays list by start date
-        holidays_items = sorted(json_request_response['items'], \
-                                key=lambda hol_items: datetime.strptime(hol_items['start']['date'], date_format))
+        holidays_items = {}
+        langs = json_request_response.keys()
+        for lang in langs :
+            holidays_items[lang] = sorted(json_request_response[lang]['items'], \
+                                    key=lambda hol_items: datetime.strptime(hol_items['start']['date'], date_format))
         holidays_by_year = [] 
         # default value, to be update with first holiday year
         year =  0000
-        for item in holidays_items :
+        langs.remove('en_US')
+        for item in holidays_items['en_US'] :
             holidays_list = []
             hol = {}
             hol['name'] = item['summary']
+            for lang in langs :
+                hol[lang] = holidays_items[lang][holidays_items['en_US'].index(item)]['summary']
             if item.has_key('description') :
                 hol['states'] = item['description'].split(': ')[1].split(', ')
             date_end = datetime.strptime(item['end']['date'], date_format) 

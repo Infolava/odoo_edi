@@ -19,25 +19,22 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # --------------------------------------------------------------------------------
-# Created:               Aug 7, 2017 3:52:34 PM by atrabelsi
-# Last modified:      2017-08-07 15:52
+# Created:               Aug 14, 2017 11:40:41 AM by atrabelsi
+# Last modified:      2017-08-14 11:40
 #
 # Last Author:           $LastChangedBy$
 # Last Checkin:          $LastChangedDate$
 # Checked out Version:   $LastChangedRevision$
 # HeadURL:               $HeadURL$
 # --------------------------------------------------------------------------------
-from openerp import fields, models, api
-        
-class HrPublicHolidaysWizard(models.TransientModel):
-    _name = 'hr.holidays.public.wizard'
-    _description = 'Transient model to import public holidays'
-    
-    country_id = fields.Many2one('res.country', 'Country')
+from openerp import models
 
-    @api.multi
-    def import_public_holidays(self):
-        year = "2017"
-        return self.env['hr.holidays.public'].import_public_holidays_by_country(self.country_id, year)
+class ir_translation(models.Model):
+    _name = 'ir.translation'
+    _inherit = 'ir.translation'
+    
+    def is_translation_exist(self, field_name, src_value, lang_id):
+        return self.search(['&', '&', ('name', '=', field_name), ('src', '=', src_value), ('lang', '=', lang_id)])
+        
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4
 #eof $Id$
