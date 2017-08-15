@@ -29,6 +29,11 @@
 						<label for="id" string="Calendar Provider Configuration"/>
 						<div name="Calendar Provider Configuration">
 							<div>
+							<label for="provider_url" />
+								<field name="provider_url" readony="1"/>
+								
+							</div>
+							<div>
 							<label for="provider_name" />
 								<field name="provider_name" readony="1"/>
 								
