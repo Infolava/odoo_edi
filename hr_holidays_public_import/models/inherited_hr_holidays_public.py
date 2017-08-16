@@ -73,10 +73,11 @@ class HrPublicHolidays(models.Model):
                 for lang in lang_codes :
                     tr = self.env['ir.translation'].is_translation_exist('hr.holidays.public.line,name', \
                                                                            hol['name'], \
-                                                                           lang)
+                                                                           lang,
+                                                                           line.id)
                     if tr :
-                        tr.write({'value' : hol[lang], 'res_id' : line.id})
-                    else :
+                        tr.write({'value' : hol[lang] if hol.has_key(lang) else hol['name']})
+                    else : 
                         self.env['ir.translation'].create({'name' : 'hr.holidays.public.line,name', \
                                                            'lang' : lang, \
                                                            'src' : hol['name'], \

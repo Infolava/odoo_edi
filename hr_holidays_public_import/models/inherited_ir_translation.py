@@ -33,8 +33,11 @@ class ir_translation(models.Model):
     _name = 'ir.translation'
     _inherit = 'ir.translation'
     
-    def is_translation_exist(self, field_name, src_value, lang_id):
-        return self.search(['&', '&', ('name', '=', field_name), ('src', '=', src_value), ('lang', '=', lang_id)])
+    def is_translation_exist(self, field_name, src_value, lang_id, res_id = False):
+        domain = [('name', '=', field_name), ('src', '=', src_value), ('lang', '=', lang_id)]
+        if res_id :
+            domain.append(('res_id', '=', res_id))
+        return self.search(domain)
         
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4
 #eof $Id$
