@@ -26,16 +26,16 @@
 			<field name="arch" type="xml">
 				<xpath expr="//group[last()]" position="after">
 					<group>
-						<label for="id" string="Calendar Provider Configuration"/>
-						<div name="Calendar Provider Configuration">
+						<label string="Calendar Provider"/>
+						<div name="Calendar Provider">
 							<div>
-							<label for="provider_url" />
-								<field name="provider_url" readony="1"/>
+							<label for="googlecalendar_name" />
+								<field name="googlecalendar_name" readony="1"/>
 								
 							</div>
 							<div>
-							<label for="provider_name" />
-								<field name="provider_name" readony="1"/>
+							<label for="googlecalendar_url" />
+								<field name="googlecalendar_url" readony="1"/>
 								
 							</div>
 							<div>
@@ -44,7 +44,7 @@
 									get the api key.
 									<br />
 									Paste the API KEY here:
-									<field name="provider_api_key"
+									<field name="googlecalendar_api_key"
 										placeholder="e.g. 1234-xyz.apps.googleusercontent.com" />
 								</blockquote>
 							</div>

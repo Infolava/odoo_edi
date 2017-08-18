@@ -40,6 +40,7 @@
                 ],
     'data': [
              'views/inherited_res_config.xml',
+             'views/calendar_provider_view.xml',
              'views/public_holidays_import_wizard_view.xml',
              'data/calendar_provider.xml',
              

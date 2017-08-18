@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright:           ©  2017 Infolava GmbH  All rights reserved.
+ ================================================================================
+    This file is part of TransALM
+
+    TransALM is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that</group> it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<openerp>
+	<data>
+
+		<record model="ir.actions.act_window" id="action_calendar_provider_tree_all">
+			<field name="name">Calendar Provider</field>
+			<field name="res_model">calendar.provider</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<menuitem id="menu_calendar_provider" name="Calendar Provider" 
+			parent="base.menu_custom" action="action_calendar_provider_tree_all"/>
+	
+		<record model="ir.ui.view" id="calendar_provider_tree">
+			<field name="name">calendar.provider.tree</field>
+			<field name="model">calendar.provider</field>
+			<field name="arch" type="xml">
+				<tree string="Calendar Providers">
+					<field name="provider_name" />
+					<field name="provider_url" />
+					<field name="provider_api_key" />
+				</tree>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="calendar_provider_form">
+			<field name="name">calendar.provider.form</field>
+			<field name="model">calendar.provider</field>
+			<field name="arch" type="xml">
+				<form string="Calendar Provider">
+					<sheet>
+						<group>
+							<field name="provider_name" />
+							<field name="provider_url" />
+							<field name="provider_api_key" />
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+	</data>
+</openerp>

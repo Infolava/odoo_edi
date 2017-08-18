@@ -26,9 +26,9 @@ class base_config_settings(models.TransientModel):
     _name = 'base.config.settings'
     _inherit = 'base.config.settings'
 
-    provider_name = fields.Char('Calendar Provider Name')
-    provider_api_key = fields.Char('Calendar Provider API key')
-    provider_url = fields.Char('Calendar Provider URL')
+    googlecalendar_name = fields.Char('Google Calendar Provider Name')
+    googlecalendar_api_key = fields.Char('Google Calendar API key')
+    googlecalendar_url = fields.Char('Google Calendar Provider URL')
 
     def default_get(self, cr, uid, fields, context=None):
         res = super(base_config_settings, self).default_get(cr, uid, fields, context=context)
@@ -36,23 +36,22 @@ class base_config_settings(models.TransientModel):
         return res
 
     def get_calendar_providers(self, cr, uid, fields, context=None):
-#         googlecalendar_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'hr_holidays_public_import', 'provider_googlecalendar')[1]
-#         googlecalendar= self.pool.get('calendar.provider').read(cr, uid, [googlecalendar_id], context = context)[0]
+        googlecalendar_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'hr_holidays_public_import', 'provider_googlecalendar')[1]
+        googlecalendar= self.pool.get('calendar.provider').read(cr, uid, [googlecalendar_id], context = context)[0]
         return {
-            'provider_name': tools.config.options['provider_name'] or 'Google Calendar',
-            'provider_api_key': tools.config.options['provider_api_key'] or 'admin',
-            'provider_url': tools.config.options['provider_url'] or "https://www.googleapis.com/calendar/v3/calendars/{country}__{lang}%40holiday.calendar.google.com/events?key={api_key}",
+            'googlecalendar_name': googlecalendar['provider_name'],
+            'googlecalendar_api_key': tools.config.options['google_api_key'] if  tools.config.options.has_key('google_api_key') else googlecalendar['provider_api_key'],
+            'googlecalendar_url': googlecalendar['provider_url'],
         }
         
     @api.multi
     def set_calendar_providers(self):
         self.ensure_one()
+        googlecalendar_id = self.pool.get('ir.model.data').get_object_reference(self._cr, self._uid, 'hr_holidays_public_import', 'provider_googlecalendar')[1]
         calendar_param = {
-            'provider_name' : self.provider_name,
-            'provider_api_key' : self.provider_api_key,
-            'provider_url' : self.provider_url,
+            'provider_name' : self.googlecalendar_name,
+            'provider_api_key' : self.googlecalendar_api_key,
+            'provider_url' : self.googlecalendar_url,
         }
 
-        self.pool.get('calendar.provider').write(self._cr, self._uid, [1], calendar_param)
-
-base_config_settings()
+        self.pool.get('calendar.provider').write(self._cr, self._uid, googlecalendar_id, calendar_param)

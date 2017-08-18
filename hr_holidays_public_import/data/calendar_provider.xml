@@ -22,6 +22,7 @@
 
 		<record id="provider_googlecalendar" model="calendar.provider">
 			<field name="provider_name">Google Calendar</field>
+			<field name="provider_api_key">admin</field>
 			<field name="provider_url"><![CDATA[https://www.googleapis.com/calendar/v3/calendars/{country}__{lang}%40holiday.calendar.google.com/events?key={api_key}]]>
 			</field>
 		</record>

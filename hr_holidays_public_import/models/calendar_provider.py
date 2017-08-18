@@ -11,12 +11,13 @@ class calendar_provider(models.Model):
 
     _name = 'calendar.provider'
     _description = 'Model to handle calendar provider parameters'
+    _rec_name = "provider_name"
 
     provider_name = fields.Char('Provider Name')
     provider_url = fields.Char('Provider URL')
     provider_api_key = fields.Char('Provider API key')
    
-    def get_country_code_from_calendar(self, country):
+    def get_country_code_from_provider(self, country):
         return country.code
     
     def provider_response_parser(self, json_request_response):
@@ -63,14 +64,14 @@ class goolglecalendar_provider(models.Model):
 #     provider_api_key = "admin"
    
     country_list = {'Australia': 'australian',
-                     'Austria': 'austrian',
-                     'Brazil' : 'canadian',
-                     'China' : 'china',
-                     'Denmark' : 'danish',
-                     'Netherlands': 'dutch',
-                     'Finland' : 'finnish',
-                     'France' : 'french',
-                     'Germany': 'german',
+                    'Austria': 'austrian',
+                    'Brazil' : 'canadian',
+                    'China' : 'china',
+                    'Denmark' : 'danish',
+                    'Netherlands': 'dutch',
+                    'Finland' : 'finnish',
+                    'France' : 'french',
+                    'Germany': 'german',
                     'Greece' : 'greek',
                     'Hong Kong' : 'hong_kong',
                     'India' : 'indian',
@@ -98,10 +99,10 @@ class goolglecalendar_provider(models.Model):
                     'United States' : 'usa',
                     'Vietnam' : 'vietnamese'}
              
-    def get_country_code_from_calendar(self, country):
+    def get_country_code_from_provider(self, country):
         if country.name in self.country_list :
             return self.country_list[country.name]
-        return super(goolglecalendar_provider, self).get_country_code_from_calendar(country)
+        return super(goolglecalendar_provider, self).get_country_code_from_provider(country)
     
     def provider_response_parser(self, json_request_response, date_format = "%Y-%m-%d"):
         from datetime import datetime, timedelta

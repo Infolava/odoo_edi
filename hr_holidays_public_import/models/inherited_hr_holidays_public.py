@@ -49,7 +49,7 @@ class HrPublicHolidays(models.Model):
         if 'en_US' not in lang_codes :
             lang_codes.insert('en_US', 0)
         provider = self.env['calendar.provider'].browse(1)
-        country_code = provider.get_country_code_from_calendar(country)
+        country_code = provider.get_country_code_from_provider(country)
         holidays_list = provider.request_handler(country_code, lang_codes, year)
         lang_codes.remove('en_US')
         for year in holidays_list :
