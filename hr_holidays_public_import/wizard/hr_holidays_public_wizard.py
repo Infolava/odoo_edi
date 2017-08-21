@@ -34,10 +34,11 @@ class HrPublicHolidaysWizard(models.TransientModel):
     _description = 'Transient model to import public holidays'
     
     country_id = fields.Many2one('res.country', 'Country')
-
+    provider_id = fields.Many2one('calendar.provider', 'Calendar Provider')
+    year = fields.Char('year', size = 4)
+    
     @api.multi
     def import_public_holidays(self):
-        year = "2017"
-        return self.env['hr.holidays.public'].import_public_holidays_by_country(self.country_id, year)
+        return self.env['hr.holidays.public'].import_public_holidays_by_country(self.provider_id, self.country_id, self.year)
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4
 #eof $Id$

@@ -25,7 +25,9 @@
 			<field name="arch" type="xml">
 				<form string="Import Public Holidays">
 					<group>
+						<field name="provider_id" required="1"/>
 						<field name="country_id" required="1"/>
+						<field name="year" required="1"/>
 					</group>
 					<footer>
 						<button name="import_public_holidays" type="object" string="Import" class="oe_highlight" />

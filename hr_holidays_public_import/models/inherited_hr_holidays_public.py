@@ -37,7 +37,7 @@ class HrPublicHolidays(models.Model):
     _name = 'hr.holidays.public'
     _inherit = 'hr.holidays.public'
         
-    def import_public_holidays_by_country(self, country, year):
+    def import_public_holidays_by_country(self, provider, country, year):
         def _get_state_ids_from_name(state_names, country_id) :
             st_ids = []
             for st_name in state_names :
@@ -48,7 +48,6 @@ class HrPublicHolidays(models.Model):
         # Ensure English is on loaded language list 
         if 'en_US' not in lang_codes :
             lang_codes.insert('en_US', 0)
-        provider = self.env['calendar.provider'].browse(1)
         country_code = provider.get_country_code_from_provider(country)
         holidays_list = provider.request_handler(country_code, lang_codes, year)
         lang_codes.remove('en_US')
