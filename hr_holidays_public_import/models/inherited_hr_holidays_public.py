@@ -36,8 +36,8 @@ from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 class HrPublicHolidays(models.Model):
     _name = 'hr.holidays.public'
     _inherit = 'hr.holidays.public'
-        
-    def import_public_holidays_by_country(self, provider, country, year):
+    
+    def import_public_holidays_by_country(self, provider, country, start_year, end_year):
         def _get_state_ids_from_name(state_names, country_id) :
             st_ids = []
             for st_name in state_names :
@@ -49,7 +49,7 @@ class HrPublicHolidays(models.Model):
         if 'en_US' not in lang_codes :
             lang_codes.insert('en_US', 0)
         country_code = provider.get_country_code_from_provider(country)
-        holidays_list = provider.request_handler(country_code, lang_codes, year)
+        holidays_list = provider.request_handler(country_code, lang_codes, start_year, end_year)
         lang_codes.remove('en_US')
         for year in holidays_list :
             year_rec = self.search([('year', '=', year['year']), ('country_id', '=', country.id)])

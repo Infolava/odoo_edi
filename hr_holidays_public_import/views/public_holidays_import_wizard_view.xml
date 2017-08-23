@@ -27,7 +27,9 @@
 					<group>
 						<field name="provider_id" required="1"/>
 						<field name="country_id" required="1"/>
-						<field name="year" required="1"/>
+						<field name="provider_name" invisible="1"/>
+						<field name="year_start" required="1" attrs="{'invisible':[('provider_name', '=', 'Google Calendar')]}"/>
+						<field name="year_end" required="1" attrs="{'invisible':[('provider_name', '=', 'Google Calendar')]}" />
 					</group>
 					<footer>
 						<button name="import_public_holidays" type="object" string="Import" class="oe_highlight" />

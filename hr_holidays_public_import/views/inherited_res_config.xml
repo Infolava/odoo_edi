@@ -26,7 +26,7 @@
 			<field name="arch" type="xml">
 				<xpath expr="//group[last()]" position="after">
 					<group>
-						<label string="Calendar Provider"/>
+						<label for="id" string="Calendar Provider"/>
 						<div name="Calendar Provider">
 							<div>
 							<label for="googlecalendar_name" />

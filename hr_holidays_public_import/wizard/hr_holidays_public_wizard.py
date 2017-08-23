@@ -28,17 +28,21 @@
 # HeadURL:               $HeadURL$
 # --------------------------------------------------------------------------------
 from openerp import fields, models, api
-        
+from datetime import date
+
 class HrPublicHolidaysWizard(models.TransientModel):
     _name = 'hr.holidays.public.wizard'
     _description = 'Transient model to import public holidays'
     
     country_id = fields.Many2one('res.country', 'Country')
     provider_id = fields.Many2one('calendar.provider', 'Calendar Provider')
-    year = fields.Char('year', size = 4)
+    provider_name = fields.Char('Provider Name', related = 'provider_id.provider_name')
+    year_start = fields.Integer('Starting Year', size = 4 , default=date.today().year)
+    year_end = fields.Integer('Ending Year', size = 4, default=date.today().year + 1)
     
     @api.multi
     def import_public_holidays(self):
-        return self.env['hr.holidays.public'].import_public_holidays_by_country(self.provider_id, self.country_id, self.year)
+        return self.env['hr.holidays.public'].import_public_holidays_by_country(self.provider_id, self.country_id, self.year_start, self.year_end)
+    
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4
 #eof $Id$

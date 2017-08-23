@@ -51,6 +51,7 @@
 							<field name="provider_name" />
 							<field name="provider_url" />
 							<field name="provider_api_key" />
+							<field name="description" />
 						</group>
 					</sheet>
 				</form>
