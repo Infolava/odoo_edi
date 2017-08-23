@@ -43,7 +43,7 @@
              'views/calendar_provider_view.xml',
              'views/public_holidays_import_wizard_view.xml',
              'data/calendar_provider.xml',
-             
+             'security/calendar_provider_access.xml'
             ],
     'installable': True,
     'application' : True,
