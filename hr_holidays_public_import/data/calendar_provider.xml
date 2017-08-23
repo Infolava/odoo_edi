@@ -25,6 +25,8 @@
 			<field name="provider_api_key">admin</field>
 			<field name="provider_url"><![CDATA[https://www.googleapis.com/calendar/v3/calendars/{country}__{lang}%40holiday.calendar.google.com/events?key={api_key}]]>
 			</field>
+			<field name="description">Google Calendar provide public holidays for three years starting from the previous year.
+			</field>
 		</record>
 
 	</data>

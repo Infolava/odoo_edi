@@ -16,6 +16,7 @@ class calendar_provider(models.Model):
     provider_name = fields.Char('Provider Name')
     provider_url = fields.Char('Provider URL')
     provider_api_key = fields.Char('Provider API key')
+    description = fields.Text('Description')
    
     def get_country_code_from_provider(self, country):
         return country.code
@@ -24,32 +25,38 @@ class calendar_provider(models.Model):
         return []
    
     @api.multi
-    def request_handler(self, country_code, lang_codes, year):
+    def request_handler(self, country_code, lang_codes, start_year, end_year):
         self.ensure_one()
         headers = {
                    'Content-Type': 'application/json',
                    }
         json_response = {}
-        for lang_code in lang_codes :
-            url = self.provider_url.format(country = country_code, lang = lang_code.split('_')[0], api_key = self.provider_api_key, year = year)
-            request = urllib2.Request(url, headers = headers)
-            try :
-                res = urllib2.urlopen(request)
-                response = res.read()
-                json_response[lang_code] = json.loads(response)
-                res.close()
-            except urllib2.HTTPError as e:
-                if e.code == 404 :
-                    if lang_code != 'en':
-                        raise ValidationError(_('Unsupported country'))
+        if self.provider_name == "Google Calendar" :
+            # only one url request for google calendar will return 3 years
+            # [previous_year, current_year, next_year]
+            end_year = start_year
+        for year in range(start_year, end_year + 1) :
+            json_response[year] = {}
+            for lang_code in lang_codes :
+                url = self.provider_url.format(country = country_code, lang = lang_code.split('_')[0], api_key = self.provider_api_key, year = year)
+                request = urllib2.Request(url, headers = headers)
+                try :
+                    res = urllib2.urlopen(request)
+                    response = res.read()
+                    json_response[year][lang_code] = json.loads(response)
+                    res.close()
+                except urllib2.HTTPError as e:
+                    if e.code == 404 :
+                        if lang_code != 'en':
+                            raise ValidationError(_('Unsupported country'))
+                        else :
+                            #TODO fix HTTPError for unsupported language 
+                            _logger.warning('Not supported language %s for provider %s' %(lang_code, self.provider_name))
+                    elif e.code == 400 :
+                        raise AccessError(_('Please contact your administration to verify API key configuration'))
                     else :
-                        #TODO fix HTTPError for unsupported language 
-                        _logger.warning('Not supported language %s for provider %s' %(lang_code, self.provider_name))
-                elif e.code == 400 :
-                    raise AccessError(_('Please contact your administration to verify API key configuration'))
-                else :
-                    #TODO Test other HTTPError
-                    raise ValidationError(_('Unknown error'))
+                        #TODO Test other HTTPError
+                        raise ValidationError(_('Unknown error'))
         return self.provider_response_parser(json_response)
 
 
@@ -104,8 +111,9 @@ class goolglecalendar_provider(models.Model):
             return self.country_list[country.name]
         return super(goolglecalendar_provider, self).get_country_code_from_provider(country)
     
-    def provider_response_parser(self, json_request_response, date_format = "%Y-%m-%d"):
+    def provider_response_parser(self, json_request_responses, date_format = "%Y-%m-%d"):
         from datetime import datetime, timedelta
+        json_request_response = json_request_responses[json_request_responses.keys()[0]]
         if not json_request_response['en_US']['items'] :
             raise Warning(_('No Data Provided for selected country'))
         # sort holidays list by start date
