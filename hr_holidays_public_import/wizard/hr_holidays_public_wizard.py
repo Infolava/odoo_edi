@@ -40,6 +40,15 @@ class HrPublicHolidaysWizard(models.TransientModel):
     year_start = fields.Integer('Starting Year', size = 4 , default=date.today().year)
     year_end = fields.Integer('Ending Year', size = 4, default=date.today().year + 1)
     
+    @api.model
+    def default_get(self, fields_list):
+        defaults = super(HrPublicHolidaysWizard, self).default_get(fields_list)
+        if self._context.has_key('active_ids') and self._context['active_ids'] :
+            pub_hol = self.env['hr.holidays.public'].browse(self._context['active_ids'])[0]
+            defaults['country_id'] = pub_hol['country_id'].id
+            defaults['year_start'] = pub_hol['year']
+            defaults['year_end'] = pub_hol['year'] + 1
+        return defaults
     @api.multi
     def import_public_holidays(self):
         return self.env['hr.holidays.public'].import_public_holidays_by_country(self.provider_id, self.country_id, self.year_start, self.year_end)

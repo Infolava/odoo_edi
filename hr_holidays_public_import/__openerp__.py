@@ -42,9 +42,11 @@
              'views/inherited_res_config.xml',
              'views/calendar_provider_view.xml',
              'views/public_holidays_import_wizard_view.xml',
+             'views/templates.xml',
              'data/calendar_provider.xml',
              'security/calendar_provider_access.xml'
             ],
+    'qweb': ['static/src/xml/import.xml'],
     'installable': True,
     'application' : True,
 }
