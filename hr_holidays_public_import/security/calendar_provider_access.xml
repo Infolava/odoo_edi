@@ -31,5 +31,28 @@
 			<field name="group_id" ref="base.group_hr_manager" />
 		</record>
 
+		<record model="ir.model.access" id="object_res_country_full_access">
+			<field name="perm_create">1</field>
+			<field name="perm_read">1</field>
+			<field name="perm_write">1</field>
+			<field name="perm_unlink">1</field>
+			<field name="name">res.country [c1_r1_u1_d1]</field>
+			<field name="model_id" 
+				ref="base.model_res_country" />
+			<field name="group_id" ref="base.group_hr_manager" />
+		</record>
+		
+		<record model="ir.model.access" id="object_res_state_full_access">
+			<field name="perm_create">1</field>
+			<field name="perm_read">1</field>
+			<field name="perm_write">1</field>
+			<field name="perm_unlink">1</field>
+			<field name="name">res.state [c1_r1_u1_d1]</field>
+			<field name="model_id" 
+				ref="base.model_res_country_state" />
+			<field name="group_id" ref="base.group_hr_manager" />
+		</record>
+		
+
 	</data>
 </openerp>
