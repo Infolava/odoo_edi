@@ -37,6 +37,7 @@
     'depends' : [
                  'hr_public_holidays',
                  'hr_contract',
+                 'base_import',
                 ],
     'data': [
              'views/inherited_res_config.xml',

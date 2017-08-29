@@ -2,29 +2,28 @@
     var QWeb = openerp.web.qweb;
     _t = instance.web._t;
     
-openerp.web.ListView.include({
-    load_list: function() {
-    	var self = this;
-    	this._super.apply(this, arguments);
-        if(this.$buttons) {
-            this.$buttons.on('click', '.oe_button_import', function() {
-            	self.do_action({
-                    type: "ir.actions.act_window",
-                    name: "Import Public Holiday",
-                    res_model: "hr.holidays.public.wizard",
-                    target: 'new',
-                    view_type : 'form',
-                    view_mode : 'form',
-                    views: [[false,'form']],
-                }, {
-                    on_reverse_breadcrumb: function () {
-                        self.reload();
-                    },
-                });
-                return false;
-            });
-        }
-    },
-//}
+    //var base_import = instance.base_import
+    instance.web.DataImport.include({
+    	start: function () {
+    		this._super();
+    		var self = this;
+    		if (this.res_model == "hr.holidays.public") { 
+    			var provider_list = new instance.web.Model('calendar.provider')
+    			.query(['id','provider_name'])
+    			.all().
+    			then(function(data) {
+    					var dd=[];
+    					var i;
+    					for (i = 0; i < data.length; i++) {dd.push({id : data[i].id, name : data[i].provider_name});}
+    						return dd;
+    					}).then(function(result) {self.$el.append(
+    		                    QWeb.render('ImportView.holidays.public', {'providers' : result}
+    		                    ));});
+    			/*this.$el.append(
+                    QWeb.render('ImportView.holidays.public', {'providers' : provider_list}
+));*/
+    			};
+    	},
+    	
 });
 }

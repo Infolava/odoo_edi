@@ -18,12 +18,41 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <templates>
-	<t t-extend="ListView.buttons">
-		<t t-jquery="span.oe_alternative" t-operation="append">
+	<!--<t t-extend="ListView.buttons">
+		 <t t-jquery="span.oe_alternative" t-operation="append">
 			<t t-if="widget.model=='hr.holidays.public'">
 				<button class="oe_button_import" type="button">Import from External
 					Provider</button>
 			</t>
+		</t> -->
+	<t t-name="ImportView.holidays.public">
+		<div class="oe_padding">
+			<h2>Import from external provider</h2>
+			<div>
+				<select name="provider_id">
+					<t t-foreach="providers or []" t-as="provider">
+						<option t-att-value="provider['id']">
+							<t t-esc="provider['name']" />
+						</option>
+					</t>
+				</select>
+			</div>
+			<div>
+				<select name="country_id">
+					<t t-foreach="countries or []" t-as="country">
+						<option t-att-value="country['id']">
+							<t t-esc="country['name']" />
+						</option>
+					</t>
+				</select>
+			</div>
+
+		</div>
+    </t>
+    
+	<t t-extend="ImportView">
+		<t t-jquery="div.oe_padding:last()" t-operation="append">
+				<div class='.import_public_holiday'/>
 		</t>
 	</t>
 	
