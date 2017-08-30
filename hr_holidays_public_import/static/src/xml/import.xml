@@ -29,6 +29,7 @@
 		<div class="oe_padding">
 			<h2>Import from external provider</h2>
 			<div>
+			<label for="provider_id">Provider :</label>
 				<select name="provider_id">
 					<t t-foreach="providers or []" t-as="provider">
 						<option t-att-value="provider['id']">
@@ -38,6 +39,7 @@
 				</select>
 			</div>
 			<div>
+			<label for="country_id">Country :</label>
 				<select name="country_id">
 					<t t-foreach="countries or []" t-as="country">
 						<option t-att-value="country['id']">
@@ -46,7 +48,14 @@
 					</t>
 				</select>
 			</div>
-
+			<div>
+				<label for="year_start">Start Year :</label>
+					<input name="year_start"/>
+			</div>
+			<div>
+				<label for="year_end">End Year :</label>
+					<input name="year_end"/>
+			</div>
 		</div>
     </t>
     
