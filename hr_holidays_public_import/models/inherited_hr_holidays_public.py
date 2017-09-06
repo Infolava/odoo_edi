@@ -27,7 +27,7 @@
 # Checked out Version:   $LastChangedRevision$
 # HeadURL:               $HeadURL$
 # --------------------------------------------------------------------------------
-from datetime import datetime
+from datetime import datetime , date
 from openerp import fields, models, api, _
 from openerp.exceptions import ValidationError, Warning
 
@@ -37,6 +37,18 @@ class HrPublicHolidays(models.Model):
     _name = 'hr.holidays.public'
     _inherit = 'hr.holidays.public'
     
+    @api.multi
+    def _get_employees_countries(self):
+        employees = self.env['hr.employee'].search([])
+        employees_contracts = [employee.contract_ids for employee in employees]
+        contracts = []
+        for employee_contracts in employees_contracts :
+            contracts += [contract for contract in employee_contracts] 
+        state_ids = [contract.state_id for contract in contracts]
+        countries = [state.country_id for state in state_ids]
+        return countries
+    
+    @api.model
     def import_public_holidays_by_country(self, provider, country, start_year, end_year):
         def _get_state_ids_from_name(state_names, country_id) :
             st_ids = []
@@ -84,6 +96,16 @@ class HrPublicHolidays(models.Model):
                                                            'res_id' : line.id,
                                                            'type' : 'model',
                                                            })
+    
+    def automate_import_public_holidays(self, cr, uid, context = None):
+        provider_id = self.pool.get('calendar.provider').search(cr, uid, [('provider_name', '=', 'Google Calendar')])[0]
+        provider = self.pool.get('calendar.provider').browse(cr, uid, provider_id)
+        start_year = date.today().year -1
+        end_year = date.today().year + 1
+        for country in self._get_employees_countries(cr, uid, context):
+            self.import_public_holidays_by_country(cr, uid, provider, country, start_year, end_year, context)
+    
+    
 
 class HrPublicHolidaysLine(models.Model):
     _inherit = 'hr.holidays.public.line'

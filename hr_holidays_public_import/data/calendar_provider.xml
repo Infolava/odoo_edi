@@ -28,6 +28,19 @@
 			<field name="description">Google Calendar provide public holidays for three years starting from the previous year.
 			</field>
 		</record>
+		
+		<!-- Cron runs only once after hr_public_holidays_import is installed to import public holidays according to all employees's contract location -->
+        <record forcecreate="True" id="automate_public_holidays_import" model="ir.cron">
+            <field name="name">One time cron to import default public holidays for all employees</field>
+            <field eval="False" name="active"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">minutes</field>
+            <field eval="'hr.holidays.public'" name="model"/>
+            <field eval="'automate_import_public_holidays'" name="function"/>
+            <field eval="'()'" name="args"/>
+            <field eval="0" name="priority"/>
+        </record>
 
 	</data>
 </openerp>
