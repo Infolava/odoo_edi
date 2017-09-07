@@ -107,8 +107,8 @@ class goolglecalendar_provider(models.Model):
                     'Vietnam' : 'vietnamese'}
              
     def get_country_code_from_provider(self, country):
-        if country.name in self.country_list :
-            return self.country_list[country.name]
+        if country.with_context(lang='en_US').name in self.country_list :
+            return self.country_list[country.with_context(lang='en_US').name]
         return super(goolglecalendar_provider, self).get_country_code_from_provider(country)
     
     def provider_response_parser(self, json_request_responses, date_format = "%Y-%m-%d"):
