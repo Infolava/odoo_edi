@@ -35,16 +35,16 @@
     'website' : 'http://www.infolava.ch',
     'summary' : "Import Public Holidays From External Provider",
     'depends' : [
-                 'hr_public_holidays',
-                 'hr_contract',
+                 'hr_contract_work_place',
+                 'hr_public_holidays_event',
                  'base_import',
                 ],
     'data': [
-             'views/inherited_res_config.xml',
              'views/calendar_provider_view.xml',
              'views/public_holidays_import_wizard_view.xml',
              'views/templates.xml',
              'data/calendar_provider.xml',
+             'data/ir_cron.xml',
              'security/calendar_provider_access.xml'
             ],
     'qweb': ['static/src/xml/import.xml'],

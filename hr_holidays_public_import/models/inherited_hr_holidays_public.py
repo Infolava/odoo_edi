@@ -32,21 +32,13 @@ from openerp import fields, models, api, _
 from openerp.exceptions import ValidationError, Warning
 
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
+import logging
+
+_logger =  logging.getLogger(__name__)
 
 class HrPublicHolidays(models.Model):
     _name = 'hr.holidays.public'
     _inherit = 'hr.holidays.public'
-    
-    @api.multi
-    def _get_employees_countries(self):
-        employees = self.env['hr.employee'].search([])
-        employees_contracts = [employee.contract_ids for employee in employees]
-        contracts = []
-        for employee_contracts in employees_contracts :
-            contracts += [contract for contract in employee_contracts] 
-        state_ids = [contract.state_id for contract in contracts]
-        countries = [state.country_id for state in state_ids]
-        return countries
     
     @api.model
     def import_public_holidays_by_country(self, provider, country, start_year, end_year):
@@ -98,15 +90,19 @@ class HrPublicHolidays(models.Model):
                                                            })
     
     def automate_import_public_holidays(self, cr, uid, context = None):
-        provider_id = self.pool.get('calendar.provider').search(cr, uid, [('provider_name', '=', 'Google Calendar')])[0]
-        provider = self.pool.get('calendar.provider').browse(cr, uid, provider_id)
-        start_year = date.today().year -1
-        end_year = date.today().year + 1
-        for country in self._get_employees_countries(cr, uid, context):
-            self.import_public_holidays_by_country(cr, uid, provider, country, start_year, end_year, context)
-    
-    
-
+        provider_ids = self.pool.get('calendar.provider').search(cr, uid, [])
+        providers = self.pool.get('calendar.provider').browse(cr, uid, provider_ids)
+        start_year = date.today().year
+        end_year = date.today().year + 10
+        employee_ids = self.pool.get('hr.employee').search(cr, uid, [])
+        for country in self.pool.get('hr.employee')._get_employees_countries(cr, uid, employee_ids, context) :
+            for provider in providers :
+                try :
+                    self.import_public_holidays_by_country(cr, uid, provider[0], country, start_year, end_year, context)
+                    break
+                except Exception, e:
+                    _logger.warning('Could not import public holidays with provider %s.\n %s' %(provider.provider_name, e.message))
+                    
 class HrPublicHolidaysLine(models.Model):
     _inherit = 'hr.holidays.public.line'
 

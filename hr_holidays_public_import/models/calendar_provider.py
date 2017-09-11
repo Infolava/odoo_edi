@@ -12,12 +12,14 @@ class calendar_provider(models.Model):
     _name = 'calendar.provider'
     _description = 'Model to handle calendar provider parameters'
     _rec_name = "provider_name"
-
+    _order = 'sequence desc'
+    
     provider_name = fields.Char('Provider Name')
     provider_url = fields.Char('Provider URL')
     provider_api_key = fields.Char('Provider API key')
     description = fields.Text('Description')
-   
+    sequence = fields.Integer('Priority')
+    
     def get_country_code_from_provider(self, country):
         return country.code
     
@@ -54,6 +56,8 @@ class calendar_provider(models.Model):
                             _logger.warning('Not supported language %s for provider %s' %(lang_code, self.provider_name))
                     elif e.code == 400 :
                         raise AccessError(_('Please contact your administration to verify API key configuration'))
+                    elif e.code == 403 :
+                        raise AccessError(_('Server temporary down. Try later or use an other provider'))
                     else :
                         #TODO Test other HTTPError
                         raise ValidationError(_('Unknown error'))

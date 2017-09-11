@@ -49,6 +49,7 @@ class HrPublicHolidaysWizard(models.TransientModel):
             defaults['year_start'] = pub_hol['year']
             defaults['year_end'] = pub_hol['year'] + 1
         return defaults
+    
     @api.multi
     def import_public_holidays(self):
         return self.env['hr.holidays.public'].import_public_holidays_by_country(self.provider_id, self.country_id, self.year_start, self.year_end)

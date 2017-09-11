@@ -27,7 +27,7 @@
 # Checked out Version:   $LastChangedRevision$
 # HeadURL:               $HeadURL$
 # --------------------------------------------------------------------------------
-import res_config, calendar_provider, inherited_hr_holidays_public
+import calendar_provider, inherited_hr_holidays_public, inherited_hr_contract
 import inherited_res_country
 import inherited_ir_translation
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4

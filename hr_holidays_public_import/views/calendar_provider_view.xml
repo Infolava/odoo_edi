@@ -27,7 +27,7 @@
 			<field name="view_mode">tree,form</field>
 		</record>
 		<menuitem id="menu_calendar_provider" name="Calendar Provider" 
-			parent="base.menu_custom" action="action_calendar_provider_tree_all"/>
+			parent="calendar.menu_calendar_configuration" action="action_calendar_provider_tree_all"/>
 	
 		<record model="ir.ui.view" id="calendar_provider_tree">
 			<field name="name">calendar.provider.tree</field>
@@ -37,6 +37,7 @@
 					<field name="provider_name" />
 					<field name="provider_url" />
 					<field name="provider_api_key" />
+					<field name="sequence"/>
 				</tree>
 			</field>
 		</record>
@@ -49,6 +50,7 @@
 					<sheet>
 						<group>
 							<field name="provider_name" />
+							<field name="sequence" />
 							<field name="provider_url" />
 							<field name="provider_api_key" />
 							<field name="description" />
@@ -56,6 +58,43 @@
 					</sheet>
 				</form>
 			</field>
+		</record>
+
+		<record model="ir.ui.view" id="calendar_provider_config_tree">
+			<field name="name">calendar.provider.config.tree</field>
+			<field name="model">api.config</field>
+			<field name="arch" type="xml">
+				<form>
+					<field name="provider_ids" widget="one2many_list" options="{'no_create': True}">
+						<tree string="Calendar Provider" editable="top" create="0" delete="0">
+							<field name="provider_name" />
+							<field name="provider_api_key" />
+						</tree>
+					</field>
+					<footer>
+						<button name="action_next" type="object" string="Apply" class="oe_highlight" />
+						or
+						<button name="action_skip" type="object" special="cancel"
+							string="Cancel" class="oe_link" />
+					</footer>
+				</form>
+			</field>
+		</record>
+		
+		<record id="action_calendar_provider_config_apikey" model="ir.actions.act_window">
+			<field name="name">Configure Calendar Provider API Key</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">api.config</field>
+			<field name="view_id" ref="calendar_provider_config_tree" />
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+	
+		<record id="action_calendar_provider_config_apikey_todo" model="ir.actions.todo">
+			<field name="action_id" ref="action_calendar_provider_config_apikey" />
+			<field name="sequence">0</field>
+			<field name="type">automatic</field>
 		</record>
 
 	</data>

@@ -19,14 +19,33 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # --------------------------------------------------------------------------------
-# Created:               Aug 8, 2017 12:37:52 PM by atrabelsi
-# Last modified:      2017-08-08 12:37
+# Created:               Sep 8, 2017 12:03:01 PM by atrabelsi
+# Last modified:      2017-09-08 12:03
 #
 # Last Author:           $LastChangedBy$
 # Last Checkin:          $LastChangedDate$
 # Checked out Version:   $LastChangedRevision$
 # HeadURL:               $HeadURL$
 # --------------------------------------------------------------------------------
-import hr_holidays_public_wizard, calendar_provider_setup_wizard
+from openerp import fields, models, api
+
+class calendar_provider_wizard(models.TransientModel):
+    _name = 'api.config'
+    _inherit = 'res.config.installer' #needed to launch config wizard
+    _description = 'Transient model to set up API Key for calendar providers'
+    
+    provider_ids = fields.Many2many('calendar.provider')
+
+    @api.model
+    def default_get(self, fields_list):
+        defaults = super(calendar_provider_wizard, self).default_get(fields_list)
+        defaults['provider_ids'] = self.env['calendar.provider'].search([]).ids
+        return defaults
+    
+    @api.multi
+    def action_next(self):
+        cron = self.env['ir.model.data'].get_object_reference( 'hr_holidays_public_import', 'automate_public_holidays_import')
+        self.env['ir.cron'].browse(cron[1]).active = True
+        return super(calendar_provider_wizard, self).action_next()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4
 #eof $Id$
