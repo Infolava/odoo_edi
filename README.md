@@ -1,4 +1,11 @@
 # odoo_edi
-Collection of addons and extensions to existing addons for Electronic Data Interchanges
+Collection of extension-addons to Odoo Electronic Data Interchanges.
+This addons are contributed or sponsored by [Infolava GmbH](www.infolava.ch)
 
-See the branches for the code
+# Credits
+To all submitters and to [Team Myrtus](https://github.com/orgs/Infolava/teams/myrtus/members)
+
+## ATTENTION
+This branche is compatible with Odoo version 8
+
+Thanks for your feedback
