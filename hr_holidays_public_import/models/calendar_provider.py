@@ -61,6 +61,8 @@ class calendar_provider(models.Model):
                     else :
                         #TODO Test other HTTPError
                         raise ValidationError(_('Unknown error'))
+                except urllib2.URLError as e:
+                    raise AccessError(_('Server temporary down. Try later or use an other provider'))
         return self.provider_response_parser(json_response)
 
 
@@ -135,7 +137,7 @@ class goolglecalendar_provider(models.Model):
             hol = {}
             hol['name'] = item['summary']
             for lang in langs :
-                hol[lang] = holidays_items[lang][holidays_items['en_US'].index(item)]['summary']
+                hol[lang] = holidays_items[lang][holidays_items['en_US'].index(item)]['summary'] if len(holidays_items[lang]) < holidays_items['en_US'].index(item) else item['summary']
             if item.has_key('description') :
                 hol['states'] = item['description'].split(': ')[1].split(', ')
             date_end = datetime.strptime(item['end']['date'], date_format) 
