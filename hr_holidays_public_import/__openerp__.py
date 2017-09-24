@@ -42,7 +42,7 @@
     'data': [
              'views/calendar_provider_view.xml',
              'views/public_holidays_import_wizard_view.xml',
-             'views/templates.xml',
+             #'views/templates.xml',     #Remove Import widget extension
              'data/calendar_provider.xml',
              'data/ir_cron.xml',
              'security/calendar_provider_access.xml'
