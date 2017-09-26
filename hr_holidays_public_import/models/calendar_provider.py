@@ -137,7 +137,9 @@ class goolglecalendar_provider(models.Model):
             hol = {}
             hol['name'] = item['summary']
             for lang in langs :
-                hol[lang] = holidays_items[lang][holidays_items['en_US'].index(item)]['summary'] if len(holidays_items[lang]) < holidays_items['en_US'].index(item) else item['summary']
+                hol[lang] = holidays_items[lang][holidays_items['en_US'].index(item)]['summary'] \
+                if (holidays_items.get(lang) and len(holidays_items[lang]) > holidays_items['en_US'].index(item)) \
+                else item['summary']
             if item.has_key('description') :
                 hol['states'] = item['description'].split(': ')[1].split(', ')
             date_end = datetime.strptime(item['end']['date'], date_format) 

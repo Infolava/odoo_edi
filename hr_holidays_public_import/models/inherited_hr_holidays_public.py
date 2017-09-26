@@ -58,7 +58,7 @@ class HrPublicHolidays(models.Model):
             if tr:
                 tr.write({'value':hol[lang] if hol.has_key(lang) else hol['name']})
             else:
-                self.env['ir.translation'].create({'name' : 'hr.holidays.public.line,name', \
+                self.env['ir.translation'].create({'name' : resource_name, \
                                                    'lang' : lang, \
                                                    'src' : hol['name'], \
                                                    'value' : hol[lang] if hol.has_key(lang) else hol['name'], \

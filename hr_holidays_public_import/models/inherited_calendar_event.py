@@ -19,16 +19,20 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # --------------------------------------------------------------------------------
-# Created:               Jul 24, 2017 11:42:46 AM by atrabelsi
-# Last modified:      2017-07-24 11:42
+# Created:               Sep 26, 2017 9:48:36 AM by atrabelsi
+# Last modified:      2017-09-26 09:48
 #
 # Last Author:           $LastChangedBy$
 # Last Checkin:          $LastChangedDate$
 # Checked out Version:   $LastChangedRevision$
 # HeadURL:               $HeadURL$
 # --------------------------------------------------------------------------------
-import calendar_provider, inherited_hr_holidays_public, inherited_hr_contract
-import inherited_res_country, inherited_calendar_event
-import inherited_ir_translation
+from openerp import fields, models
+
+class calendar_event(models.Model):
+    _inherit = 'calendar.event'
+    
+    name = fields.Char('Meeting Subject', required=True, states={'done': [('readonly', True)]}, translate = True)
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4
 #eof $Id$
