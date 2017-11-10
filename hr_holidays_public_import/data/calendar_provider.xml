@@ -18,7 +18,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <openerp>
-	<data noupdate="1">
+	<data>
 
 		<record id="provider_googlecalendar" model="calendar.provider">
 			<field name="provider_name">Google Calendar</field>

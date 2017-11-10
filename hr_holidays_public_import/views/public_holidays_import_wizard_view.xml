@@ -18,7 +18,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <openerp>
-	<data noupdate="1">
+	<data>
 		<record model="ir.ui.view" id="wizard_import_public_holidays_form_view">
 			<field name="name">Import Public Holidays</field>
 			<field name="model">hr.holidays.public.wizard</field>

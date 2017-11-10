@@ -18,7 +18,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <openerp>
-	<data noupdate="1">
+	<data>
 		<!-- Cron runs only once after hr_public_holidays_import is installed to 
 			import public holidays according to all employees's contract location -->
 		<record forcecreate="True" id="automate_public_holidays_import" model="ir.cron">

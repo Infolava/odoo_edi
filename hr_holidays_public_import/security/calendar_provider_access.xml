@@ -18,7 +18,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <openerp>
-	<data noupdate="1">
+	<data>
 		<!-- Groups access to object calendar provider -->
 		<record model="ir.model.access" id="object_calendar_provider_full_access">
 			<field name="perm_create">1</field>
